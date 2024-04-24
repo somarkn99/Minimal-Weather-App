@@ -11,26 +11,25 @@ class WeatherPage extends StatefulWidget {
 }
 
 class _WeatherPageState extends State<WeatherPage> {
-  final _weatherService = WeatherService("e1e32a24ddea1bb05b8e89211d265a4b");
+  final _weatherService = WeatherService();
   Weather? _weather;
 
   _fetchWeather() async {
     String cityName = await _weatherService.getCurrentCity();
-    try{
+    try {
       final weather = await _weatherService.getWeather(cityName);
       setState(() {
         _weather = weather;
       });
-    }
-    catch (e){
+    } catch (e) {
       print(e);
     }
   }
 
-  String getWeatherAnimation(String? mainCondition){
+  String getWeatherAnimation(String? mainCondition) {
     if (mainCondition == null) return 'assets/sunny.json';
 
-    switch (mainCondition.toLowerCase()){
+    switch (mainCondition.toLowerCase()) {
       case 'clouds':
       case 'mist':
       case 'smoke':
@@ -51,7 +50,6 @@ class _WeatherPageState extends State<WeatherPage> {
     }
   }
 
-
   @override
   void initState() {
     // TODO: implement initState
@@ -60,21 +58,21 @@ class _WeatherPageState extends State<WeatherPage> {
     _fetchWeather();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[800],
       body: Center(
         child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(_weather?.cityName ?? "Loading City ...."),
-          Lottie.asset(getWeatherAnimation(_weather?.mainCondition)),
-          Text('${_weather?.temperature.round()}℃'),
-          Text(_weather?.mainCondition ?? ""),
-    ],),
-       ),
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(_weather?.cityName ?? "Loading City ...."),
+            Lottie.asset(getWeatherAnimation(_weather?.mainCondition)),
+            Text('${_weather?.temperature.round()}℃'),
+            Text(_weather?.mainCondition ?? ""),
+          ],
+        ),
+      ),
     );
   }
 }

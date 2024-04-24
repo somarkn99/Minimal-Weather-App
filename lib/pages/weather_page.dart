@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:minimal_weather_app/models/weather_model.dart';
+import 'package:minimal_weather_app/services/weather_service.dart';
 
 class WeatherPage extends StatefulWidget {
   const WeatherPage({super.key});
@@ -8,8 +10,42 @@ class WeatherPage extends StatefulWidget {
 }
 
 class _WeatherPageState extends State<WeatherPage> {
+  final _weatherService = WeatherService("e1e32a24ddea1bb05b8e89211d265a4b");
+  Weather? _weather;
+
+  _fetchWeather() async {
+    String cityName = await _weatherService.getCurrentCity();
+    try{
+      final weather = await _weatherService.getWeather(cityName);
+      setState(() {
+        _weather = weather;
+      });
+    }
+    catch (e){
+      print(e);
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _fetchWeather();
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      body: Center(
+        child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(_weather?.cityName ?? "Loading City ...."),
+          Text('${_weather?.temperature.round()}℃'),
+    ],),
+      ),
+    );
   }
 }
